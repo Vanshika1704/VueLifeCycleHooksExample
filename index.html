@@ -2,16 +2,63 @@
 <html>
 
 <head>
-	<title>Sandbox</title>
+	<title>Vue Lifecycle hooks demonstration</title>
 	<meta charset="UTF-8" />
 	<link rel="stylesheet" href="src/styles.css">
+	<style>
+		.box {
+                background-color: purple;
+                height: 200px;
+                width: 200px;
+            }
+	</style>
 </head>
 
 <body>
-<h1>HTML/CSS/JS Scratch Template</h1>
-	<div id="app"></div>
+<h1>Vue lifecycle hooks demonstration</h1>
+	<div id="app">
 
-	<script src="src/index.js">
+		<button @click="toggleBox">Toggle Box</button>
+		<test-box v-if="isVisible"/>
+	</div>
+
+	<script src="src/index.js"></script>
+	<script src="https://unpkg.com/vue@next"></script>
+	<script>
+	let app=Vue.createApp({
+		data(){
+			return {
+				isVisible : false,
+			}
+		},
+		methods :{
+			toggleBox(){
+				this.isVisible=!this.isVisible
+			}
+		},
+		//creating a lifecycle hook here : updated()
+		updated(){
+			console.log('updated') // on hitting toggle box button updated will always run because we are changing isVisible value everytime we hit the button
+		}
+	})
+	app.component('test-box',{
+			template:`
+			<div class="box"></div>
+			`,
+			//creating lifecycle hooks here:
+			//when we hit Toggle box button once, box DOM element is created , created() and mounted() run and print the consoles
+			//when we hit toggle box button again, box DOM element is removed and unmounted() runs and prints in the console
+			created(){
+				console.log('created')
+			},
+			mounted(){
+				console.log('mounted')
+			},
+			unmounted(){
+				console.log('unmounted')
+			},
+		})
+	app.mount('#app')
 	</script>
 </body>
 
